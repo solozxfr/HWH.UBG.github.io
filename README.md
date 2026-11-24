@@ -1,8 +1,6 @@
-<h1 align="center">Cherri</h1>
+<h1 align="center">HWH.UBG</h1>
 
-<p align="center">
-  <img alt="image" src="https://github.com/user-attachments/assets/d0532d69-892b-4b08-ae29-f2191295fbf7" />
-</p>
+<p align="center"> note this was made mainly with cherri proxy! rest was made by solozx
 
 <p align="center">
   A UBG project built to be clean, simple, and easy to use. With over 700 games sourced from two different stores, 40 apps, a fast and powerful browser, extensive customization options, and much more, this is easily one of the best unblocked websites.
