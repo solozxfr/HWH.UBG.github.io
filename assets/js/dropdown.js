@@ -7,6 +7,7 @@ const appSettings = {
   theme: localStorage.getItem("cherri_theme") || "default",
   store: localStorage.getItem("cherri_gameStore") || "Classplay",
 };
+const dropdownRoot = new URL("../../", document.currentScript.src);
 
 const searchEngineSelector = document.querySelector(".search-engine-selector");
 const searchEngineSelected = searchEngineSelector.querySelector(
@@ -248,8 +249,8 @@ function applyDecoy(s) {
         s +
         " was selected"
     );
-    document.title = "cherri";
-    favicon.href = "/assets/img/fav.png";
+    document.title = "HWH.UBG";
+    favicon.href = new URL("uv/hwh-logo.png", dropdownRoot).href;
     return;
   } else {
     document.title = selected.title;
@@ -319,9 +320,9 @@ document.addEventListener("themeUpdated", (e) => {
   const theme = e.detail ?? "default";
 
   if (theme !== "default") {
-    link.href = `/assets/css/themes/${theme}.css`;
+    link.href = new URL(`assets/css/themes/${theme}.css`, dropdownRoot).href;
   } else {
-    link.href = "/assets/css/colors.css";
+    link.href = new URL("assets/css/colors.css", dropdownRoot).href;
   }
 });
 document.addEventListener("wispUpdated", (e) => {

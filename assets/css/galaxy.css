@@ -1,0 +1,303 @@
+html {
+    background: #080011 !important;
+}
+
+body {
+    position: relative;
+    isolation: isolate;
+    background: transparent !important;
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+body::before {
+    z-index: -1;
+    background:
+        radial-gradient(ellipse at 18% 22%, rgba(119, 31, 190, 0.3), transparent 42%),
+        radial-gradient(ellipse at 78% 68%, rgba(206, 33, 161, 0.2), transparent 38%),
+        radial-gradient(ellipse at 54% 5%, rgba(59, 38, 177, 0.24), transparent 34%),
+        radial-gradient(circle, rgba(255, 255, 255, 0.64) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(206, 176, 255, 0.48) 0 1px, transparent 1.8px),
+        #080011;
+    background-size: 130% 125%, 125% 130%, 120% 115%, 240px 240px, 350px 350px, 100% 100%;
+    translate: var(--galaxy-background-x, 0px) var(--galaxy-background-y, 0px);
+    transform: scale(1.08);
+    animation: galaxy-drift 24s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+body::after {
+    z-index: -1;
+    inset: auto;
+    top: 16%;
+    left: -30%;
+    width: 180px;
+    height: 2px;
+    opacity: 0;
+    border-radius: 50%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.96), rgba(207, 142, 255, 0.85), transparent);
+    box-shadow: 0 0 12px 2px rgba(188, 111, 255, 0.45);
+    transform: rotate(-32deg);
+    animation: shooting-star 7s ease-in infinite;
+}
+
+@keyframes galaxy-drift {
+    from {
+        transform: translate3d(-12px, -8px, 0) scale(1.08);
+    }
+
+    to {
+        transform: translate3d(12px, 8px, 0) scale(1.08);
+    }
+}
+
+@keyframes shooting-star {
+    0%,
+    65% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) rotate(-32deg);
+    }
+
+    68% {
+        opacity: 0.9;
+    }
+
+    83%,
+    100% {
+        opacity: 0;
+        transform: translate3d(170vw, 55vh, 0) rotate(-32deg);
+    }
+}
+
+.home-logo-wrap {
+    position: relative;
+    display: grid;
+    place-items: center;
+    isolation: isolate;
+}
+
+.home-logo-wrap::before,
+.home-logo-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 8%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.home-logo-wrap::before {
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(173, 75, 255, 0.5), rgba(132, 42, 203, 0.13) 50%, transparent 74%);
+    filter: blur(20px);
+    animation: logo-glow 3.2s ease-in-out infinite alternate;
+}
+
+.home-logo-wrap::after {
+    inset: -5%;
+    background:
+        radial-gradient(circle, #f8dfff 0 1.5px, transparent 2px) 7% 25% / 18px 18px no-repeat,
+        radial-gradient(circle, #bba2ff 0 1.5px, transparent 2px) 91% 34% / 20px 20px no-repeat,
+        radial-gradient(circle, #ffbaf2 0 1px, transparent 2px) 83% 86% / 16px 16px no-repeat;
+    animation: logo-particles 5s ease-in-out infinite alternate;
+}
+
+.home-logo {
+    width: clamp(150px, 22vw, 220px);
+    height: auto;
+    border-radius: 18px;
+    box-shadow: 0 0 26px rgba(156, 75, 255, 0.42);
+    transform: translate3d(var(--galaxy-logo-x, 0px), var(--galaxy-logo-y, 0px), 0);
+    transition: transform 180ms ease-out, box-shadow 220ms ease;
+}
+
+.home-logo:hover,
+.nav-logo img:hover {
+    box-shadow: 0 0 34px rgba(196, 115, 255, 0.75);
+}
+
+.nav-logo img {
+    filter: drop-shadow(0 0 8px rgba(162, 85, 255, 0.6));
+    transition: filter 220ms ease;
+}
+
+.hwh-main-nav ul li:first-child {
+    position: relative;
+    isolation: isolate;
+}
+
+.hwh-main-nav ul li:first-child::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle, #f8dfff 0 1px, transparent 2px) 7% 25% / 12px 12px no-repeat,
+        radial-gradient(circle, #bba2ff 0 1px, transparent 2px) 91% 34% / 12px 12px no-repeat,
+        radial-gradient(circle, #ffbaf2 0 1px, transparent 2px) 83% 86% / 12px 12px no-repeat;
+    animation: logo-particles 5s ease-in-out infinite alternate;
+}
+
+.hwh-main-nav ul li:first-child > a {
+    position: relative;
+    z-index: 1;
+}
+
+#splash::after {
+    content: "|";
+    display: inline-block;
+    margin-left: 3px;
+    color: #d7adff;
+    animation: typing-cursor 750ms steps(2, start) infinite;
+}
+
+@keyframes typing-cursor {
+    to {
+        visibility: hidden;
+    }
+}
+
+@keyframes logo-glow {
+    from {
+        opacity: 0.58;
+        transform: scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+}
+
+@keyframes logo-particles {
+    from {
+        transform: translate3d(0, 3px, 0);
+        opacity: 0.58;
+    }
+
+    to {
+        transform: translate3d(0, -5px, 0);
+        opacity: 1;
+    }
+}
+
+.home-attribution {
+    color: rgba(235, 222, 255, 0.72);
+    font-size: 0.85rem;
+}
+
+.home-attribution a {
+    color: #e4caff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.home-attribution a:hover {
+    color: #fff;
+}
+
+.hwh-wordmark span:nth-child(1) {
+    color: #00e853;
+}
+
+.hwh-wordmark span:nth-child(2) {
+    color: #ffdf00;
+}
+
+.hwh-wordmark span:nth-child(3) {
+    color: #168df5;
+}
+
+.hwh-wordmark span:nth-child(4) {
+    color: #ff1d25;
+}
+
+.newtab-wordmark {
+    color: #fff;
+    font-size: 6rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.home-logo-wrap + #splash {
+    margin-top: 0.75rem;
+}
+
+.apps-wrapper .collection-empty,
+.games-wrapper .collection-empty {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+}
+
+body > .collection-empty {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1001;
+    transform: translate(-50%, -50%);
+}
+
+.collection-empty {
+    width: 100%;
+    padding: 18px;
+    color: var(--text);
+    text-align: center;
+}
+
+.galaxy-paused::before,
+.galaxy-paused::after,
+.galaxy-paused .hwh-main-nav ul li:first-child::after {
+    animation-play-state: paused;
+}
+
+body.galaxy-inactive::before,
+body.galaxy-inactive::after,
+body.galaxy-inactive .home-logo-wrap::before,
+body.galaxy-inactive .home-logo-wrap::after,
+body.galaxy-inactive #splash::after,
+body.galaxy-inactive .hwh-main-nav ul li:first-child::after {
+    animation-play-state: paused;
+}
+
+@media (max-width: 700px) {
+    body::before {
+        animation-duration: 28s;
+        background-size: 130% 125%, 125% 130%, 120% 115%, 300px 300px, 420px 420px, 100% 100%;
+    }
+
+    body::after {
+        display: none;
+    }
+
+    .home-logo {
+        width: clamp(140px, 42vw, 190px);
+    }
+
+    .hwh-wordmark {
+        font-size: clamp(2.2rem, 11vw, 4rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after,
+    .home-logo-wrap::before,
+    .home-logo-wrap::after,
+    .hwh-main-nav ul li:first-child::after,
+    #splash::after {
+        animation: none;
+    }
+
+    body::after {
+        display: none;
+    }
+}

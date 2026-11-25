@@ -12,6 +12,7 @@ const tabTitle = document.querySelector('title');
 
 const themeLink = document.getElementById('css-theme-link');
 const savedTheme = localStorage.getItem('cherri_theme') ?? 'default';
+const settingsRoot = new URL("../../", document.currentScript.src);
 
 if (savedCloakIcon || savedCloakTitle) {
     tabIcon.href = savedCloakIcon || tabIcon.href;
@@ -30,10 +31,10 @@ function setTabIcon(v) {
 
 function applyTheme(t) {
   if (t !== "default") {
-    themeLink.href = `/assets/css/themes/${t}.css`;
+    themeLink.href = new URL(`assets/css/themes/${t}.css`, settingsRoot).href;
     localStorage.setItem("cherri_theme", t);
   } else {
-    themeLink.href = `/assets/css/colors.css`;
+    themeLink.href = new URL("assets/css/colors.css", settingsRoot).href;
     localStorage.setItem("cherri_theme", "default");
   }
 }
@@ -72,56 +73,56 @@ function setWispServer(url) {
 function cloakMe(o) {
     switch (o) {
         case "gclassroom":
-            tabIcon.href = "/assets/img/cloaks/gclassroom.png";
+            tabIcon.href = new URL("assets/img/cloaks/gclassroom.png", settingsRoot).href;
             document.title = "Google Classroom";
             localStorage.setItem("cherri_cloakIcon", tabIcon.href);
             localStorage.setItem("cherri_cloakTitle", document.title);
             break;
         case "gdrive":
-            tabIcon.href = "/assets/img/cloaks/gdrive.png";
+            tabIcon.href = new URL("assets/img/cloaks/gdrive.png", settingsRoot).href;
             document.title = "My Drive - Google Drive";
             localStorage.setItem("cherri_cloakIcon", tabIcon.href);
             localStorage.setItem("cherri_cloakTitle", document.title);
             break;
         case "google":
-            tabIcon.href = "/assets/img/cloaks/google.png";
+            tabIcon.href = new URL("assets/img/cloaks/google.png", settingsRoot).href;
             document.title = "Google";
             localStorage.setItem("cherri_cloakIcon", tabIcon.href);
             localStorage.setItem("cherri_cloakTitle", document.title);
             break;
         case "edpuzzle":
-            tabIcon.href = "/assets/img/cloaks/edpuzzle.png";
+            tabIcon.href = new URL("assets/img/cloaks/edpuzzle.png", settingsRoot).href;
             document.title = "Edpuzzle";
             localStorage.setItem("cherri_cloakIcon", tabIcon.href);
             localStorage.setItem("cherri_cloakTitle", document.title);
             break;
         case "iready":
-            tabIcon.href = "/assets/img/cloaks/iready.png";
+            tabIcon.href = new URL("assets/img/cloaks/iready.png", settingsRoot).href;
             document.title = "i-Ready Login";
             localStorage.setItem("cherri_cloakIcon", tabIcon.href);
             localStorage.setItem("cherri_cloakTitle", document.title);
             break;
         case "gmail":
-            tabIcon.href = "/assets/img/cloaks/gmail.png";
+            tabIcon.href = new URL("assets/img/cloaks/gmail.png", settingsRoot).href;
             document.title = "Gmail";
             localStorage.setItem("cherri_cloakIcon", tabIcon.href);
             localStorage.setItem("cherri_cloakTitle", document.title);
             break;
         case "blooket":
-            tabIcon.href = "/assets/img/cloaks/blooket.png";
+            tabIcon.href = new URL("assets/img/cloaks/blooket.png", settingsRoot).href;
             document.title = "Blooket - Fun Learning Games for Students";
             localStorage.setItem("cherri_cloakIcon", tabIcon.href);
             localStorage.setItem("cherri_cloakTitle", document.title);
             break;
         case "kahoot":
-            tabIcon.href = "/assets/img/cloaks/kahoot.png";
+            tabIcon.href = new URL("assets/img/cloaks/kahoot.png", settingsRoot).href;
             document.title = "Kahoot! | Learning Games | Make Learning Awesome!";
             localStorage.setItem("cherri_cloakIcon", tabIcon.href);
             localStorage.setItem("cherri_cloakTitle", document.title);
             break;
         case "none":
-            tabIcon.href = "/assets/img/fav.png";
-            document.title = "cherri";
+            tabIcon.href = new URL("uv/hwh-logo.png", settingsRoot).href;
+            document.title = "HWH.UBG";
             localStorage.setItem("cherri_cloakIcon", tabIcon.href);
             localStorage.setItem("cherri_cloakTitle", document.title);
             break;

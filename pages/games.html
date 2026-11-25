@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cherri | games</title>
-    <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon" id="tabIcon">
-    <link rel="stylesheet" href="/assets/css/colors.css" id="css-theme-link">
-    <link rel="stylesheet" href="/assets/css/elements.css">
-    <link rel="stylesheet" href="/assets/css/font.css">
-    <link rel="stylesheet" href="/assets/icons/fonts/remixicon.css">
-    <script src="/assets/js/lib/particles.js"></script>
-    <script src="/assets/js/colors.js"></script>
+    <title>HWH.UBG | Games</title>
+    <link rel="icon" href="../uv/hwh-logo.png" type="image/png" id="tabIcon">
+    <link rel="stylesheet" href="../assets/css/colors.css" id="css-theme-link">
+    <link rel="stylesheet" href="../assets/css/galaxy.css">
+    <link rel="stylesheet" href="../assets/css/elements.css">
+    <link rel="stylesheet" href="../assets/css/font.css">
+    <link rel="stylesheet" href="../assets/icons/fonts/remixicon.css">
+    <script src="../assets/js/colors.js"></script>
+    <script src="../assets/js/galaxy.js" defer></script>
 </head>
 
 <body>
@@ -23,31 +24,31 @@
             <div class="container" style="display: flex; flex-direction: row;">
                 <div class="top-nav">
                     <li>
-                        <a class="active" href="/">
+                        <a class="active" href="../">
                             <i class="ri ri-home-4-line"></i>
                             Home
                         </a>
                     </li>
                     <li>
-                        <a href="/pages/games.html">
+                        <a href="../pages/games.html">
                             <i class="ri ri-gamepad-line"></i>
                             Games
                         </a>
                     </li>
                     <li>
-                        <a href="/pages/apps.html">
+                        <a href="../pages/apps.html">
                             <i class="ri ri-apps-line"></i>
                             Apps
                         </a>
                     </li>
                     <li>
-                        <a href="/pages/browser.html">
+                        <a href="../pages/browser.html">
                             <i class="ri ri-seo-line"></i>
                             Browser
                         </a>
                     </li>
                     <li>
-                        <a href="/pages/movieframe.html">
+                        <a href="../pages/movieframe.html">
                             <i class="ri ri-film-line"></i>
                             Movies
                         </a>
@@ -55,27 +56,9 @@
                 </div>
                 <div>
                     <li>
-                        <a style="cursor: pointer;" onclick="window.open('https://discord.gg/hUYzETaQ9U', '_blank')">
-                            <i class="ri ri-discord-fill"></i>
-                            Discord
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/pages/partners.html">
-                            <i class="ri ri-shake-hands-fill"></i>
-                            Partners
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/pages/settings.html">
+                        <a href="/?settings=1">
                             <i class="ri ri-settings-3-line"></i>
                             Settings
-                        </a>
-                    </li>
-                    <li>
-                        <a style="cursor: pointer;" onclick="window.open('https://github.com/x8rr/cherri/releases/latest', '_blank')">
-                            <i class="ri ri-github-fill"></i>
-                            Beta 2.2
                         </a>
                     </li>
                 </div>
@@ -84,7 +67,7 @@
     </nav>
 
     <div class="nav-logo">
-        <img src="/assets/img/fav.png" alt="" onclick="
+        <img src="../uv/hwh-logo.png" alt="HWH.UBG" onclick="
             ul.classList.add('active');
             const blurr = document.createElement('div')
             blurr.classList.add('bluroverlay')
@@ -97,16 +80,6 @@
     </div>
 
     <style>
-        #particles-container {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            opacity: 0.5;
-        }
-
         .container {
             display: flex;
         }
@@ -228,7 +201,6 @@
         }
     </style>
 
-    <div id="particles-container"></div>
     <div class="hcenter">
         <h1 style="text-align: center;">Games</h1>
         <input style="margin: 3px;" type="text" placeholder="Search for a game..." onkeyup="searchApps(this.value)">
@@ -236,12 +208,7 @@
 
     <div class="apps-container hcenter" style="top: 200px;">
     </div>
-
-    <script>
-        particlesJS.load('particles-container', '/assets/json/config/particles.json', function () {
-            console.log('Particles.js config loaded');
-        });
-    </script>
+    <p class="collection-empty" hidden>No games found.</p>
 
     <script defer>
         const ul = document.getElementById("nav-ul")
@@ -275,45 +242,103 @@
         })
 
         const acont = document.querySelector('.apps-container');
-
-        let data
-        let res
-
-        async function getJson() {
-            res = await fetch('/assets/json/classplay.json');
-            data = await res.json();
-        }
-
-        function loadApps() {
-            getJson().then(() => {
-                data.forEach(app => {
-                    const appDiv = document.createElement('div');
-                    appDiv.classList.add('app');
-
-                    appDiv.innerHTML = `
-                    <div class="app-img" style="background: url('${app.image}');" onclick="window.location.href = '/pages/play.html?launch=${app.url}&name=${app.name}&img=${app.image}'"></div>
-                        <div class="title">
-                        <h2 class="h2-title">${app.name}</h2>
-                    </div>
-                    `;
-
-                    acont.appendChild(appDiv);
+        const imageObserver = "IntersectionObserver" in window
+            ? new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const image = entry.target;
+                    image.style.backgroundImage = `url("${image.dataset.bg}")`;
+                    imageObserver.unobserve(image);
                 });
-            })
+            }, { rootMargin: "200px 0px" })
+            : null;
+        let games = [];
+        let searchTerm = "";
+        let renderIndex = 0;
+
+        function renderGamesBatch() {
+            const fragment = document.createDocumentFragment();
+            const end = Math.min(renderIndex + 40, games.length);
+
+            for (; renderIndex < end; renderIndex += 1) {
+                const game = games[renderIndex];
+                const card = document.createElement("div");
+                card.classList.add("app");
+                card.setAttribute("role", "link");
+                card.setAttribute("tabindex", "0");
+                card.setAttribute("aria-label", `Play ${game.name}`);
+
+                const image = document.createElement("div");
+                image.classList.add("app-img");
+                image.dataset.bg = game.img;
+                if (imageObserver) imageObserver.observe(image);
+                else image.style.backgroundImage = `url("${game.img}")`;
+
+                const title = document.createElement("div");
+                title.classList.add("title");
+                const heading = document.createElement("h2");
+                heading.classList.add("h2-title");
+                heading.textContent = game.name;
+                title.appendChild(heading);
+                card.append(image, title);
+                card.style.display = game.name.toLowerCase().includes(searchTerm) ? "" : "none";
+
+                const openGame = () => {
+                    const query = new URLSearchParams({
+                        launch: game.url,
+                        name: game.name,
+                        img: game.img,
+                    });
+                    window.location.href = `../pages/play.html?${query}`;
+                };
+                card.addEventListener("click", openGame);
+                card.addEventListener("keydown", event => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openGame();
+                    }
+                });
+                fragment.appendChild(card);
+            }
+
+            acont.appendChild(fragment);
+            if (renderIndex < games.length) requestAnimationFrame(renderGamesBatch);
         }
 
-        loadApps()
+        async function loadGames() {
+            const selectedStore = localStorage.getItem("cherri_gameStore") || "Classplay";
+            const file = selectedStore.toLowerCase() === "gn-math" ? "gn-math" : "classplay";
+            const response = await fetch(`../assets/json/${file}.json`);
+            if (!response.ok) {
+                throw new Error(`Could not load ${file} game data (${response.status})`);
+            }
+
+            games = await response.json();
+            renderIndex = 0;
+            updateEmptyState(games.filter(game => game.name.toLowerCase().includes(searchTerm)).length);
+            renderGamesBatch();
+        }
+
+        loadGames().catch(error => {
+            console.error("Unable to load games:", error);
+            document.querySelector(".collection-empty").textContent = "Games could not be loaded.";
+            document.querySelector(".collection-empty").hidden = false;
+        });
 
         function searchApps(q) {
-            const apps = document.querySelectorAll('.app');
-            apps.forEach(app => {
-                const title = app.querySelector('.h2-title').innerText.toLowerCase();
-                if (title.includes(q.toLowerCase())) {
-                    app.style.display = 'block';
-                } else {
-                    app.style.display = 'none';
-                }
+            searchTerm = q.trim().toLowerCase();
+            acont.querySelectorAll(".app").forEach(card => {
+                const matches = card.querySelector(".h2-title").textContent.toLowerCase().includes(searchTerm);
+                card.style.display = matches ? "" : "none";
             });
+            const totalMatches = games.filter(game => game.name.toLowerCase().includes(searchTerm)).length;
+            updateEmptyState(totalMatches);
+        }
+
+        function updateEmptyState(visibleCount) {
+            const emptyState = document.querySelector(".collection-empty");
+            const visible = visibleCount ?? acont.querySelectorAll(".app:not([style*='display: none'])").length;
+            emptyState.hidden = visible > 0;
         }
     </script>
 </body>

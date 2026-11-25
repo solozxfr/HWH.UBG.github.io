@@ -1,7 +1,9 @@
 let aTab = 0;
 let tabCounter = 1;
 let bTabs = [];
-const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+const browserRoot = new URL("../../", document.currentScript.src);
+const browserPath = (path) => new URL(path, browserRoot).href;
+const connection = new BareMux.BareMuxConnection(browserPath("baremux/worker.js"));
 const wispUrl = localStorage.getItem("cherri_wispUrl") || "wss://wisp.rhw.one/";
 const bareUrl = "https://useclassplay.vercel.app/fq/";
 
@@ -22,13 +24,13 @@ if (se === "DuckDuckGo") {
   searchE = "https://search.brave.com/search?q=";
 }
 
-connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
+connection.setTransport(browserPath("libcurl/index.mjs"), [{ websocket: wispUrl }]);
 
 const CONFIG = {
   files: {
-    wasm: "/homework/history.wasm.wasm",
-    all: "/homework/math.all.js",
-    sync: "/homework/science.sync.js",
+    wasm: browserPath("homework/history.wasm.wasm"),
+    all: browserPath("homework/math.all.js"),
+    sync: browserPath("homework/science.sync.js"),
   },
 };
 
@@ -57,7 +59,7 @@ function newTab() {
   tabElement.classList.add("tab", "hcontainer");
   tabElement.dataset.tabId = nTab.id;
   tabElement.innerHTML = `
-        <img src="/assets/img/fav.png" id="fav" data-fav-id="${nTab.id}" width="24" alt="">
+        <img src="${browserPath("uv/hwh-logo.png")}" id="fav" data-fav-id="${nTab.id}" width="24" alt="HWH.UBG">
             <span>
                 New Tab
             </span>
@@ -82,7 +84,7 @@ function newTab() {
   tabFrame.classList.add("viewframe", "browser-frame");
   tabFrame.dataset.frameId = nTab.id;
   tabFrame.setAttribute("allowfullscreen", "true");
-  tabFrame.src = "/newtab.html";
+  tabFrame.src = browserPath("newtab.html");
 
   document.body.appendChild(tabFrame);
 
@@ -161,7 +163,7 @@ function nav(i) {
   ) {
     fUrl = scramjet.encodeUrl(url);
   } else if (localStorage.getItem("cherri_backend") === "Ultraviolet") {
-    fUrl = "/uv/service/" + __uv$config.encodeUrl(url);
+    fUrl = browserPath("uv/service/") + __uv$config.encodeUrl(url);
   } else {
     fUrl = scramjet.encodeUrl(url);
   }
@@ -202,7 +204,7 @@ function updateUrlFromIframe(viewframe) {
 
 async function go(u) {
   if (!(await connection.getTransport())) {
-    connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
+    connection.setTransport(browserPath("libcurl/index.mjs"), [{ websocket: wispUrl }]);
   }
 
   console.log("a");
@@ -331,22 +333,52 @@ function hideBrowser() {
   b.style.pointerEvents = "none";
 }
 
-async function launchEruda() {
+let erudaLoadPromise = null;
+
+function loadEruda() {
+  if (window.eruda) return Promise.resolve(window.eruda);
+  if (erudaLoadPromise) return erudaLoadPromise;
+
+  erudaLoadPromise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/eruda@3.4.3/eruda.min.js";
+    script.async = true;
+    script.onload = () => {
+      if (window.eruda) resolve(window.eruda);
+      else {
+        erudaLoadPromise = null;
+        reject(new Error("Eruda loaded without exposing its API."));
+      }
+    };
+    script.onerror = () => {
+      erudaLoadPromise = null;
+      reject(new Error("Could not load Eruda."));
+    };
+    document.head.appendChild(script);
+  });
+
+  return erudaLoadPromise;
+}
+
+async function launchEruda(button) {
   showToast("info", "Launching Eruda...", "fas fa-info-circle");
   try {
+    const eruda = await loadEruda();
     eruda.init();
+    button?.querySelector("i")?.style.setProperty("color", "var(--accent)");
     showToast(
       "success",
       "Successfully injected Eruda",
       "fa-solid fa-check-circle"
     );
-  } catch (e) {
+  } catch (error) {
+    console.error("Could not initialize Eruda:", error);
     showToast("error", "Failed to inject Eruda", "fas fa-times-circle");
   }
 }
 
 async function fixProxy() {
-  await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
+  await connection.setTransport(browserPath("libcurl/index.mjs"), [{ websocket: wispUrl }]);
 
   showToast("success", "Connection reset to Libcurl!", "fas fa-check-circle")
   console.log(
@@ -355,7 +387,7 @@ async function fixProxy() {
     "color: white; font-weight: normal;"
   );
 
-  await navigator.serviceWorker.register("/sw.js")
+  await navigator.serviceWorker.register(browserPath("sw.js"))
 
   showToast("success", "Service workers reregistered. (1/2)", "fas fa-check-circle");
   console.log(
@@ -364,7 +396,7 @@ async function fixProxy() {
     "color: white; font-weight: normal;"
   );
 
-  await navigator.serviceWorker.register("/uv/sw.js")
+  await navigator.serviceWorker.register(browserPath("uv/sw.js"))
 
   showToast("success", "Service workers reregistered. (2/2)", "fas fa-check-circle");
   console.log(

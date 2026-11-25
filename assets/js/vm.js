@@ -76,4 +76,4 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-showToast("success", "VMs are still in beta! Report bugs in the Discord or on the repo.", "fas fa-exclamation-circle")
+showToast("success", "VMs are still in beta! Report bugs in the repository.", "fas fa-exclamation-circle")

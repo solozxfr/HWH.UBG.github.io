@@ -1,9 +1,9 @@
 <h1 align="center">HWH.UBG</h1>
 
-<p align="center"> note this was made mainly with cherri proxy! rest was made by solozx
+<p align="center">Mainly made with Cherri; customized for HWH.UBG.</p>
 
 <p align="center">
-  A UBG project built to be clean, simple, and easy to use. With over 700 games sourced from two different stores, 40 apps, a fast and powerful browser, extensive customization options, and much more, this is easily one of the best unblocked websites.
+  A UBG project built to be clean, simple, and easy to use. It includes 576 game catalog entries across two stores, 30 apps, a built-in browser, and extensive customization options.
 </p>
  
 <hr>
@@ -18,37 +18,18 @@
 * [x] Game overlay
 
 
-## If You Fork This Project
+## Fork and license notice
 
-Please consider starring the repository.
+HWH.UBG is based on [x8rr/cherri](https://github.com/x8rr/cherri) and retains the
+upstream project's AGPL-3.0 license in `LICENSE`. This fork changes the visible
+branding and theme, adds an animated galaxy background and announcement effect,
+and repairs game/app discovery and embedded-browser navigation. Catalogs load on
+demand, cards render in batches, thumbnails load near the viewport, and background
+motion pauses when the tab is inactive or a game/browser page is in use. The game
+catalogs, proxy workers, and player remain based on the existing Cherri implementation.
 
-You must **not**:
-
-* Modify the AGPL license
-* Claim this code as your own
-* Fail to provide proper credit
-* Use this code in your website without attribution
-* Detach from the fork network without giving credit
-* Violate the license in any way
-* Steal the code or redistribute it without acknowledgment
-
-You *may*:
-
-* Deploy it without any modifications
-* Deploy it with modifications (as long as credit and a changelog are included)
-* Perform other allowed actions as defined by the license
-
-To remain compliant, it is recommended that you include a notice like this:
-
----
-
-## FORK NOTICE
-
-This repository was derived from [x8rr/cherri](https://github.com/x8rr/cherri). All original code was written by the project owner (x8rr). The following changes have been made to this fork:
-
-* Change 1
-* Change 2
-* Change 3
-
----
+Game files, bundled libraries, and other third-party assets may have separate
+licenses or redistribution terms. Check their individual notices before
+redistributing them; the AGPL notice for this repository does not replace those
+terms.
  

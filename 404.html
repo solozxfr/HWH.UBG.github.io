@@ -4,20 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <link rel="icon" type="image/svg+xml" href="/assets/fav.png">
-    <title>404 | cherri</title>
+    <base href="/HWH.UBG.github.io/">
+    <link rel="icon" type="image/png" href="uv/hwh-logo.png">
+    <title>404 | HWH.UBG</title>
     <link rel="preconnect" href="https://fdn.fontcdn.ir">
     <link rel="preconnect" href="https://v1.fontapi.ir">
     <link href="https://v1.fontapi.ir/css/SFProDisplay" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="/uv/uv.bundle.js"></script>
-    <script src="/uv/uv.config.js"></script>
-    <script src="/baremux/index.js"></script>
-    <link rel="stylesheet" href="/styles/index.css">
-    <link rel="stylesheet" href="/assets/css/colors.css">
-    <script src="/assets/js/colors.js"></script>
-    <link rel="stylesheet" href="/fa/css/all-pro.css">
+    <script src="uv/uv.bundle.js"></script>
+    <script src="uv/uv.config.js"></script>
+    <script src="baremux/index.js"></script>
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="assets/css/colors.css">
+    <link rel="stylesheet" href="assets/css/galaxy.css">
+    <script src="assets/js/galaxy.js" defer></script>
+    <script src="assets/js/colors.js"></script>
+    <link rel="stylesheet" href="fa/css/all-pro.css">
 </head>
 
 <body>
@@ -27,7 +30,7 @@
         <h1 class="text-8xl text-[var(--bright-text)] font-bold">404</h1>
         <p class="text-[var(--text)]">not found.</p>
         <br>
-        <a href="/" class="text-[var(--text)] opacity-50 underline underline-offset-3 hover:opacity-100 transition-all">back home</a>
+        <a href="./" class="text-[var(--text)] opacity-50 underline underline-offset-3 hover:opacity-100 transition-all">back home</a>
     </div>
 
     
@@ -54,17 +57,17 @@
     <script>
         async function registerSW() {
             if ("serviceWorker" in navigator) {
-                await navigator.serviceWorker.register("/uv/sw.js").then(() => {
+                await navigator.serviceWorker.register("uv/sw.js").then(() => {
                     console.log(
-                        "%cbreeze." + "%c uv sw registered!",
+                        "%cHWH.UBG" + "%c UV worker registered!",
                         "color: white; background: linear-gradient(to bottom right, #040c16, #000000); border-radius: 5px; font-weight: bold; padding: 6px; font-family: sans-serif;",
                         "color: white; background: transparent; border-radius: 0px; padding: 0px;"
                     );
                 });
 
-                await navigator.serviceWorker.register("/sw.js").then(() => {
+                await navigator.serviceWorker.register("sw.js").then(() => {
                     console.log(
-                        "%cbreeze." + "%c sj sw registered!",
+                        "%cHWH.UBG" + "%c Scramjet worker registered!",
                         "color: white; background: linear-gradient(to bottom right, #040c16, #000000); border-radius: 5px; font-weight: bold; padding: 6px; font-family: sans-serif;",
                         "color: white; background: transparent; border-radius: 0px; padding: 0px;"
                     );
@@ -88,7 +91,7 @@
             } else {
                 homeContent.style.display = "none"
                 contentFrame.style.display = "block"
-                contentFrame.src = `/pages/${l}.html`
+                contentFrame.src = `pages/${l}.html`
             }
         }
 
@@ -106,7 +109,7 @@
 
             homeContent.classList.add('hidden');
             contentFrame.classList.add('active');
-            contentFrame.src = "/pages/ultraviolet.html?i=" + url;
+            contentFrame.src = "pages/ultraviolet.html?i=" + url;
             location.href = "#?i=" + url
         }
 

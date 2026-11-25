@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cherri | apps</title>
-    <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon" id="tabIcon">
-    <link rel="stylesheet" href="/assets/css/colors.css" id="css-theme-link">
-    <link rel="stylesheet" href="/assets/css/elements.css">
-    <link rel="stylesheet" href="/assets/css/font.css">
-    <link rel="stylesheet" href="/assets/icons/fonts/remixicon.css">
-    <script src="/assets/js/lib/particles.js"></script>
-    <script src="/assets/js/colors.js"></script>
+    <title>HWH.UBG | Apps</title>
+    <link rel="icon" href="../uv/hwh-logo.png" type="image/png" id="tabIcon">
+    <link rel="stylesheet" href="../assets/css/colors.css" id="css-theme-link">
+    <link rel="stylesheet" href="../assets/css/galaxy.css">
+    <link rel="stylesheet" href="../assets/css/elements.css">
+    <link rel="stylesheet" href="../assets/css/font.css">
+    <link rel="stylesheet" href="../assets/icons/fonts/remixicon.css">
+    <script src="../assets/js/colors.js"></script>
+    <script src="../assets/js/galaxy.js" defer></script>
 </head>
 
 <body>
@@ -23,31 +24,31 @@
             <div class="container" style="display: flex; flex-direction: row;">
                 <div class="top-nav">
                     <li>
-                        <a class="active" href="/">
+                        <a class="active" href="../">
                             <i class="ri ri-home-4-line"></i>
                             Home
                         </a>
                     </li>
                     <li>
-                        <a href="/pages/games.html">
+                        <a href="../pages/games.html">
                             <i class="ri ri-gamepad-line"></i>
                             Games
                         </a>
                     </li>
                     <li>
-                        <a href="/pages/apps.html">
+                        <a href="../pages/apps.html">
                             <i class="ri ri-apps-line"></i>
                             Apps
                         </a>
                     </li>
                     <li>
-                        <a href="/pages/browser.html">
+                        <a href="../pages/browser.html">
                             <i class="ri ri-seo-line"></i>
                             Browser
                         </a>
                     </li>
                     <li>
-                        <a href="/pages/movieframe.html">
+                        <a href="../pages/movieframe.html">
                             <i class="ri ri-film-line"></i>
                             Movies
                         </a>
@@ -55,27 +56,9 @@
                 </div>
                 <div>
                     <li>
-                        <a style="cursor: pointer;" onclick="window.open('https://discord.gg/hUYzETaQ9U', '_blank')">
-                            <i class="ri ri-discord-fill"></i>
-                            Discord
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/pages/partners.html">
-                            <i class="ri ri-shake-hands-fill"></i>
-                            Partners
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/pages/settings.html">
+                        <a href="/?settings=1">
                             <i class="ri ri-settings-3-line"></i>
                             Settings
-                        </a>
-                    </li>
-                    <li>
-                        <a style="cursor: pointer;" onclick="window.open('https://github.com/x8rr/cherri/releases/latest', '_blank')">
-                            <i class="ri ri-github-fill"></i>
-                            Beta 2.2
                         </a>
                     </li>
                 </div>
@@ -84,7 +67,7 @@
     </nav>
 
     <div class="nav-logo">
-        <img src="/assets/img/fav.png" alt="" onclick="
+        <img src="../uv/hwh-logo.png" alt="HWH.UBG" onclick="
             ul.classList.add('active');
             const blurr = document.createElement('div')
             blurr.classList.add('bluroverlay')
@@ -97,16 +80,6 @@
     </div>
 
     <style>
-        #particles-container {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            opacity: 0.5;
-        }
-
         .container {
             display: flex;
         }
@@ -227,10 +200,6 @@
             background: radial-gradient(at top, var(--bg-3) 30%, transparent 70%);
         }
     </style>
-
-
-    <div id="particles-container"></div>
-
     <div class="hcenter">
         <h1 style="text-align: center;">Apps</h1>
         <input type="text" placeholder="Search for an app..." onkeyup="searchApps(this.value)">
@@ -239,6 +208,7 @@
     <div class="apps-container hcenter" style="top: 200px;">
 
     </div>
+    <p class="collection-empty" hidden>No apps found.</p>
 
     <script defer>
         const ul = document.getElementById("nav-ul")
@@ -272,45 +242,84 @@
         })
 
         const acont = document.querySelector('.apps-container');
-
-        let data
-        let res
-
-        async function getJson() {
-            res = await fetch('/assets/json/apps.json');
-            data = await res.json();
-        }
-
-        function loadApps() {
-            getJson().then(() => {
-                data.forEach(app => {
-                    const appDiv = document.createElement('div');
-                    appDiv.classList.add('app');
-
-                    appDiv.innerHTML = `
-                    <div class="app-img" style="background: url('${app.img}');" onclick="window.location.href = '/pages/browser.html?launch=${app.url}'"></div>
-                        <div class="title">
-                        <h2 class="h2-title">${app.name}</h2>
-                    </div>
-                    `;
-
-                    acont.appendChild(appDiv);
+        const imageObserver = "IntersectionObserver" in window
+            ? new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const image = entry.target;
+                    image.style.backgroundImage = `url("${image.dataset.bg}")`;
+                    imageObserver.unobserve(image);
                 });
-            })
+            }, { rootMargin: "200px 0px" })
+            : null;
+
+        async function loadApps() {
+            try {
+                const response = await fetch("../assets/json/apps.json");
+                if (!response.ok) {
+                    throw new Error(`Could not load apps (${response.status})`);
+                }
+
+                const apps = await response.json();
+                apps.forEach(app => {
+                    const card = document.createElement("div");
+                    card.classList.add("app");
+                    card.setAttribute("role", "link");
+                    card.setAttribute("tabindex", "0");
+                    card.setAttribute("aria-label", `Open ${app.name} in the built-in browser`);
+
+                    const image = document.createElement("div");
+                    image.classList.add("app-img");
+                    image.dataset.bg = app.img;
+                    if (imageObserver) imageObserver.observe(image);
+                    else image.style.backgroundImage = `url("${app.img}")`;
+
+                    const title = document.createElement("div");
+                    title.classList.add("title");
+                    const heading = document.createElement("h2");
+                    heading.classList.add("h2-title");
+                    heading.textContent = app.name;
+                    title.appendChild(heading);
+                    card.append(image, title);
+
+                    const openApp = () => {
+                        const query = new URLSearchParams({ launch: app.url });
+                        window.location.href = `../pages/browser.html?${query}`;
+                    };
+                    card.addEventListener("click", openApp);
+                    card.addEventListener("keydown", event => {
+                        if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            openApp();
+                        }
+                    });
+                    acont.appendChild(card);
+                });
+                updateEmptyState();
+            } catch (error) {
+                console.error("Unable to load apps:", error);
+                document.querySelector(".collection-empty").textContent = "Apps could not be loaded.";
+                document.querySelector(".collection-empty").hidden = false;
+            }
         }
 
-        loadApps()
+        loadApps();
 
         function searchApps(q) {
-            const apps = document.querySelectorAll('.app');
-            apps.forEach(app => {
-                const title = app.querySelector('.h2-title').innerText.toLowerCase();
-                if (title.includes(q.toLowerCase())) {
-                    app.style.display = 'block';
-                } else {
-                    app.style.display = 'none';
-                }
+            const query = q.trim().toLowerCase();
+            let visible = 0;
+            acont.querySelectorAll(".app").forEach(card => {
+                const matches = card.querySelector(".h2-title").textContent.toLowerCase().includes(query);
+                card.style.display = matches ? "" : "none";
+                if (matches) visible += 1;
             });
+            updateEmptyState(visible);
+        }
+
+        function updateEmptyState(visibleCount) {
+            const emptyState = document.querySelector(".collection-empty");
+            const visible = visibleCount ?? acont.querySelectorAll(".app:not([style*='display: none'])").length;
+            emptyState.hidden = visible > 0;
         }
     </script>
 </body>

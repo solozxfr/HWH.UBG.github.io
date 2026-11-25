@@ -30,15 +30,15 @@ nav {
     z-index: 5;
     border-radius: 20px;
     width: fit-content;
-    margin-top: 10px;
+    top: 10px;
     height: 50px;
     opacity: 1;
     position: fixed;
-    left: 50%;
+    left: 12px;
     padding-left: 3px;
     padding-right: 3px;
-    transform: translateX(-50%);
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     pointer-events: none;
 }
 
@@ -49,7 +49,7 @@ nav ul {
     overflow: hidden;
     background: transparent;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     transition: 0.2s;
 }
 
@@ -124,7 +124,7 @@ li.toright {
 #homeContent {
     position: fixed;
     text-align: center;
-    top: 50%;
+    top: 43%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
@@ -379,7 +379,6 @@ p a:hover {
 
 .apps-wrapper.settings-hidden,
 .games-wrapper.settings-hidden,
-.partners-wrapper.settings-hidden,
 .download-wrapper.settings-hidden {
     transform: translate(-50%, -50%) scale(.9);
     opacity: 0;
@@ -389,7 +388,6 @@ p a:hover {
 
 .apps-wrapper.settings-shown,
 .games-wrapper.settings-shown,
-.partners-wrapper.settings-shown,
 .download-wrapper.settings-shown {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
@@ -589,25 +587,6 @@ p a:hover {
     transform-origin: center center;
 }
 
-.partners-wrapper {
-    position: fixed;
-    height: 60vh;
-    width: 500px;
-    padding: 15px;
-    backdrop-filter: blur(10px);
-    background: color-mix(in srgb, var(--bg) 30%, transparent 70%);
-    border: 2px solid transparent;
-    box-shadow: 0 0 0 .5px rgba(255, 255, 255, 0.15),
-        0 16px 32px rgba(0, 0, 0, 0.12);
-    border-radius: 25px;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 6;
-    transition: 0.2s;
-    transform-origin: center center;
-}
-
 .download-wrapper {
     position: fixed;
     height: 27vh;
@@ -626,11 +605,6 @@ p a:hover {
     opacity: 1;
     transition: 0.2s;
     transform-origin: center center;
-}
-
-.partner-container {
-    height: 43vh;
-    overflow-y: auto;
 }
 
 .apps-container,
@@ -696,11 +670,6 @@ p a:hover {
 
 .app:hover {
     scale: 1.05;
-}
-
-.app.partner-square {
-    height: 150px;
-    width: 150px;
 }
 
 .dashboard-container {
@@ -1056,17 +1025,6 @@ button.button:hover {
     opacity: 1;
     pointer-events: all;
     transform-origin: center center;
-}
-
-#particles-container,
-#vanta-fog-container {
-    position: fixed;
-    z-index: 0;
-    opacity: 0.3;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
 }
 
 .browser-loading {
@@ -1465,4 +1423,206 @@ span.online-count {
 
 .wispInput:focus {
     background: color-mix(in srgb, var(--bg-2) 90%, transparent 10%);
+}
+
+.home-footer {
+    position: absolute;
+    top: calc(100% + 42px);
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.home-announcement {
+    min-height: 1.35em;
+    color: rgba(255, 255, 255, 0.94);
+    font-size: clamp(1.65rem, 3.8vw, 2.45rem);
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.home-reviews {
+    position: fixed;
+    left: 50%;
+    bottom: 12px;
+    z-index: 1;
+    width: min(680px, calc(100vw - 32px));
+    padding: 9px 16px 10px;
+    transform: translateX(-50%);
+    border: 1px solid color-mix(in srgb, var(--text) 20%, transparent);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--bg-5) 88%, transparent);
+    text-align: center;
+    pointer-events: none;
+}
+
+.home-reviews[hidden],
+.game-library-callout[hidden] {
+    display: none;
+}
+
+.review-disclaimer {
+    margin: 0 0 4px;
+    color: rgba(235, 222, 255, 0.72);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+}
+
+.review-quote {
+    min-height: 1.4em;
+    margin: 0;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.game-library-callout {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 215px;
+    padding: 14px 16px;
+    transform: translateY(-50%);
+    border: 1px solid color-mix(in srgb, var(--text) 24%, transparent);
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--bg-4) 88%, transparent);
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.game-library-callout:hover,
+.game-library-callout:focus-visible {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--bg-3) 92%, transparent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.game-library-callout:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.game-library-title {
+    color: var(--bright-text);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.game-library-callout .ri-arrow-right-line {
+    color: var(--accent);
+}
+
+.game-library-hint {
+    color: rgba(235, 222, 255, 0.68);
+    font-size: 12px;
+}
+
+nav img[alt="HWH.UBG"] {
+    filter: drop-shadow(0 0 7px rgba(162, 85, 255, 0.7));
+}
+
+.root-nav-logo {
+    display: block;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    transform: translate3d(var(--galaxy-logo-x, 0px), var(--galaxy-logo-y, 0px), 0);
+    transition: filter 180ms ease, transform 180ms ease-out;
+}
+
+.root-nav-logo:hover {
+    filter: drop-shadow(0 0 11px rgba(196, 115, 255, 0.9));
+}
+
+@media (max-width: 700px) {
+    nav {
+        max-width: calc(100vw - 24px);
+    }
+
+    nav ul li {
+        flex: 0 0 28px;
+        width: 28px;
+    }
+
+    nav ul li:first-child {
+        flex-basis: 40px;
+        width: 40px;
+    }
+
+    #homeContent {
+        top: 42%;
+        width: calc(100vw - 24px);
+    }
+
+    .home-reviews {
+        bottom: 8px;
+        width: calc(100vw - 20px);
+        padding: 8px 10px;
+    }
+
+    .review-disclaimer {
+        font-size: 10px;
+    }
+
+    .review-quote {
+        font-size: 12px;
+    }
+
+    .game-library-callout {
+        top: 78px;
+        right: 10px;
+        width: min(190px, calc(100vw - 20px));
+        padding: 10px 12px;
+        transform: none;
+    }
+
+    #homesearch {
+        width: min(355px, calc(100vw - 92px));
+    }
+
+    .settings-container,
+    .chat-container {
+        width: calc(100vw - 20px);
+        height: min(72vh, 620px);
+    }
+
+    .settings-content-container {
+        height: calc(min(72vh, 620px) - 30px);
+        left: 25%;
+        width: 72%;
+        margin-left: 6px;
+    }
+
+    .settings-sidebar {
+        width: 24%;
+    }
+
+    .settings-section {
+        padding: 8px 4px;
+        font-size: 12px;
+    }
+
+    .apps-wrapper,
+    .games-wrapper {
+        width: calc(100vw - 20px);
+        height: 76vh;
+        padding: 8px;
+    }
+
+    .apps-wrapper input#apps-search,
+    .games-wrapper input#apps-search {
+        max-width: calc(100vw - 60px);
+    }
+
+    .apps-container,
+    .games-container {
+        width: calc(100vw - 44px);
+    }
 }

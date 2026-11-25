@@ -1,88 +1,106 @@
-const splashes = [
-  "wsp",
-  "made by x8r",
-  "im hungry",
-  "w speed",
-  "scramjet > ultraviolet",
-  "social stuff coming soon",
-  "penguins :thumbs-up:",
-  "plz star",
-  "sock",
-  "sdakjlfhaskdfg",
-  "#CherriTeam",
-  "1 2 skip a few",
-  ":broken-heart: :wilted-rose:",
-  "canceled due to the rain :(",
-  "keep this lwk",
-  "dont share too much!",
-  "microwaves don't actually add radiation",
-  "certified goofy",
-  "loading...",
-  "alt + f4 to end your filter trust",
-  "today is tuesday (probably)",
-  "approved by 0 fda members",
-  "i forgor",
-  "beuh no bing",
-  "better than study hall",
-  "banana mode",
-  "my dog ate my homework",
-  "&quot;As you can see, I am getting robbed&quot;",
-  "the f students are NOT inventors twin",
-  "the way you read this is so tuff twin",
-  "consider touching grass?",
-  "free snacks at level 10",
-  "____",
-  "<!DOCTYPE javascript>",
-  "moar",
-  "doot doot",
-  "six seven twin",
-  "who ate the server",
-  "ok maybe i lied",
-  "&quot;Max what is this...depressing bean?&quot;",
-  "keyboard go brrr",
-  "a sticky touchpad, you have",
-  "made with -12% effort",
-  "i know it, but i just can't prove it",
-  "*insert doakes edit here*",
-  "powered by...uh...potatoes",
-  "very average",
-  "look behind you",
-  "crunchy code",
-  "wow such splash",
-  "who unplugged the internet",
-  "taste the spaghetti code",
-  "100% organic",
-  "wait this isn't math class",
-  "go back to monomials",
-  "NO DONT RELOAD ON ME",
-  "highly flammable",
-  "the all new iphone 234 pro max ultra thin air",
-  "beta version forever",
-  "system wobble",
-  "don't wiggle your ram",
-  "Some people might think",
-  "ignore the smoke",
-  "&quot;FIRST ZERO C*KE&quot;",
-  "built in the dark",
-  "fresh out of the oven",
-  "i am self aware",
-  "asdf",
-  "i summa lumma dooma looma you assumin ima human what i gotta do to get it through to you innovatin and made of rubba so that anything you say is ricocheting off of me and it'll glue to you i'm devastatin more than demonstratin how to give a motherfuckin audience the feeling that its levitating never fading and i know the haters are forever waitin for the day they can say i fell off theyll be celebrating cuz i know how to get em motivated i make elevatin music you make elevator music",
-  "404",
-  "dont. press. the. button.",
-  "Also try <a href='https://vapor.my/' target='_blank'>VAPOR!</a>",
-  "Also try ROPAV!",
-  "dont report bugs they make me feel bad",
-  "i know why you're here...",
-  "welcome back",
-  "<a href='https://youtube.com'>youtube.com</a>",
-  "try { goOutside() } catch (e) { console.log('chronically online user detected') }",
-  "nothing is real. this is a simulation",
-  "so how was your day?",
+const announcements = [
+  "Welcome to HWH.UBG.",
+  "Pick a game and make it your next favorite.",
+  "Switch collections in Settings under Game Library.",
+  "Explore games, apps, and the built-in browser.",
+  "Your next quick game break starts here.",
+  "Find something fun to play today.",
+  "Browse the collection and jump right in.",
+  "The galaxy is yours to explore.",
+  "Open a game and let the fun begin.",
+  "More games are just a library switch away.",
+  "Welcome back to HWH.UBG.",
 ];
 
-const randomSplashN = Math.floor(Math.random() * splashes.length);
-const randomSplash = splashes[randomSplashN];
+for (let index = announcements.length - 1; index > 1; index -= 1) {
+  const randomIndex = 1 + Math.floor(Math.random() * index);
+  [announcements[index], announcements[randomIndex]] = [
+    announcements[randomIndex],
+    announcements[index],
+  ];
+}
 
-const splashTextEl = document.getElementById("splash");
-splashTextEl.innerHTML = randomSplash;
+const announcementEl = document.getElementById("splash");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+if (announcementEl) {
+  let typingTimer = null;
+
+  function renderAnnouncement(announcement, length) {
+    const visibleText = announcement.slice(0, length);
+    const brand = "HWH.UBG";
+    const brandIndex = announcement.indexOf(brand);
+
+    if (brandIndex < 0 || length <= brandIndex) {
+      announcementEl.textContent = visibleText;
+      return;
+    }
+
+    const visibleBrand = brand.slice(0, Math.min(brand.length, length - brandIndex));
+    const wordmark = document.createElement("span");
+    wordmark.className = "hwh-wordmark";
+    let remaining = visibleBrand;
+
+    for (const part of ["H", "W", "H", ".UBG"]) {
+      const character = document.createElement("span");
+      character.textContent = remaining.slice(0, part.length);
+      remaining = remaining.slice(part.length);
+      wordmark.appendChild(character);
+    }
+
+    announcementEl.replaceChildren(
+      document.createTextNode(visibleText.slice(0, brandIndex)),
+      wordmark,
+      document.createTextNode(visibleText.slice(brandIndex + visibleBrand.length)),
+    );
+  }
+
+  if (reducedMotion.matches) {
+    renderAnnouncement(announcements[0], announcements[0].length);
+  } else {
+    let announcementIndex = 0;
+    let characterIndex = 0;
+    let deleting = false;
+
+    function scheduleTyping(delay) {
+      if (document.hidden) return;
+      window.clearTimeout(typingTimer);
+      typingTimer = window.setTimeout(() => {
+        typingTimer = null;
+        typeAnnouncement();
+      }, delay);
+    }
+
+    function typeAnnouncement() {
+      if (document.hidden) return;
+      const announcement = announcements[announcementIndex];
+      renderAnnouncement(announcement, characterIndex);
+
+      if (!deleting && characterIndex < announcement.length) {
+        characterIndex += 1;
+        scheduleTyping(55);
+      } else if (!deleting) {
+        deleting = true;
+        scheduleTyping(1500);
+      } else if (characterIndex > 0) {
+        characterIndex -= 1;
+        scheduleTyping(28);
+      } else {
+        deleting = false;
+        announcementIndex = (announcementIndex + 1) % announcements.length;
+        scheduleTyping(350);
+      }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        window.clearTimeout(typingTimer);
+        typingTimer = null;
+      } else {
+        scheduleTyping(0);
+      }
+    });
+
+    typeAnnouncement();
+  }
+}

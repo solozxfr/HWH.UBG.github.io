@@ -3,7 +3,8 @@ const useCursor = localStorage.getItem("cherri_customCursor") ?? "yes";
 let animationId = null;
 let mouseMoveHandler = null;
 let messageHandler = null;
-let hideInterval = null;
+let hideTimeout = null;
+let visibilityHandler = null;
 
 function cursor() {
   const cursor = document.createElement("div");
@@ -24,25 +25,36 @@ function cursor() {
   document.body.appendChild(cursor);
 
   let cursorVisible = true;
-  let lastMove = Date.now();
   let mouseX = 0;
   let mouseY = 0;
   let displayX = 0;
   let displayY = 0;
 
   function animate() {
-    displayX += (mouseX - displayX) * 0.25;
-    displayY += (mouseY - displayY) * 0.25;
+    const deltaX = mouseX - displayX;
+    const deltaY = mouseY - displayY;
+    if (Math.abs(deltaX) < 0.1 && Math.abs(deltaY) < 0.1) {
+      displayX = mouseX;
+      displayY = mouseY;
+      cursor.style.transform = `translate(${displayX - 8}px, ${displayY - 8}px)`;
+      animationId = null;
+      return;
+    }
+
+    displayX += deltaX * 0.25;
+    displayY += deltaY * 0.25;
     cursor.style.transform = `translate(${displayX - 8}px, ${displayY - 8}px)`;
     animationId = requestAnimationFrame(animate);
   }
-  animate();
 
   function updateCursor(x, y) {
+    if (document.hidden) return;
     mouseX = x;
     mouseY = y;
-    lastMove = Date.now();
     if (!cursorVisible) showCursor();
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(hideCursor, 500);
+    if (animationId === null) animationId = requestAnimationFrame(animate);
   }
 
   mouseMoveHandler = (e) => updateCursor(e.clientX, e.clientY);
@@ -73,13 +85,27 @@ function cursor() {
   hideCursorStyle.id = "cursor-style-zxs";
   document.head.appendChild(hideCursorStyle);
 
-  hideInterval = setInterval(() => {
-    if (Date.now() - lastMove > 500 && cursorVisible) hideCursor();
-  }, 250);
+  hideTimeout = setTimeout(hideCursor, 500);
+
+  visibilityHandler = () => {
+    if (!document.hidden) return;
+    clearTimeout(hideTimeout);
+    hideTimeout = null;
+    if (animationId !== null) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+    hideCursor();
+  };
+  document.addEventListener("visibilitychange", visibilityHandler);
 
   function hideCursor() {
     cursor.style.opacity = "0";
     cursorVisible = false;
+    if (animationId !== null) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
   }
 
   function showCursor() {
@@ -89,7 +115,7 @@ function cursor() {
 }
 
 function removeCursor() {
-  if (animationId) {
+  if (animationId !== null) {
     cancelAnimationFrame(animationId);
     animationId = null;
   }
@@ -101,13 +127,17 @@ function removeCursor() {
     window.removeEventListener("message", messageHandler);
     messageHandler = null;
   }
-  if (hideInterval) {
-    clearInterval(hideInterval);
-    hideInterval = null;
+  if (hideTimeout) {
+    clearTimeout(hideTimeout);
+    hideTimeout = null;
+  }
+  if (visibilityHandler) {
+    document.removeEventListener("visibilitychange", visibilityHandler);
+    visibilityHandler = null;
   }
   const cursorEl = document.getElementById("cursor-thank-you-zxs");
   const cursorStyle = document.getElementById("cursor-style-zxs");
-  if (cursorEl) cursorEl.style.opacity = "0";
+  if (cursorEl) cursorEl.remove();
   if (cursorStyle) cursorStyle.remove();
 }
 
